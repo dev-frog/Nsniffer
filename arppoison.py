@@ -1,4 +1,4 @@
-#!/bin/python
+#!/bin/python3
 import scapy.all as scapy
 from colorama import Fore,Back,Style
 import terminal_banner
@@ -63,10 +63,11 @@ def Arp(targetIp,targetMac,routerIP):
 	scapy.send(packet,verbose=False)
 
 def Ipforward():
-	ipf = open('/proc/sys/net/ipv4/ip_forward','r+')
+	ipf = open('/proc/sys/net/ipv4/ip_forward','r')
 	ipf_read = ipf.read()
 	if ipf_read != 1:
-		ipf.write('1\n')
+		os.system('echo 1 > /proc/sys/net/ipv4/ip_forward')
+		ipf.close()
 	else:
 		ipf.close()
 
