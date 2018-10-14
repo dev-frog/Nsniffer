@@ -1,3 +1,0 @@
-hackingdojo.com/wp-login.php
-
-	log=admin&pwd=admin&g-recaptcha-response=&wp-submit=Log+In&redirect_to=http%3A%2F%2Fhackingdojo.com%2Fwp-admin%2F&testcookie=1

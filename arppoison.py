@@ -1,10 +1,13 @@
-#!/bin/python3
+#!/usr/bin/python3
 import scapy.all as scapy
 from colorama import Fore,Back,Style
 import terminal_banner
 from time import sleep
 import os
 import sys
+import requests
+from json_encoder import json
+
 
 
 class color:
@@ -45,13 +48,18 @@ def Scan(ip):
 	answered_list = scapy.srp(arp_request_broadcast,timeout=1,verbose=False)[0]
 	return answered_list
 
+def vendorNmae(mac):
+	result = requests.get('http://macvendors.co/api/'+mac).json()
+	for key,value in result['result'].items():
+		if key == 'company':
+			return value
+
 def Print(answered_list):
-	print("\n\n  No \tIP\t\t\tMAC Adress\n-----------------------------------------------")	
+	print("\n\n  No \tIP\t\t\tMAC Adress\t Vendor Nmae\n--------------------------------------------------------------------------------")	
 	hostlist = 0
 	for element in answered_list:
-		print(" |" + str(hostlist) +"|  " + element[1].psrc +"\t\t" + element[1].hwsrc)
-		# client_dict = {"ip":element[1].psrc ,"mac" : element[1].hwsrc}
-		# targetIp_list.append(client_dict)
+		vendorname = vendorNmae(element[1].hwsrc)
+		print(" |" + str(hostlist) +"|  " + element[1].psrc +"\t\t" + element[1].hwsrc + '\t' + vendorname )
 		hostlist +=1
 
 def GetMac(ip):

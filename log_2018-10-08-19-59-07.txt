@@ -1,3 +1,0 @@
-www.wechall.net/login
-
-	username=nisga&password=012457&bind_ip=&login=Login

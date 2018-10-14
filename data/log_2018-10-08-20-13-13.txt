@@ -1,3 +1,0 @@
-demo.testfire.net/bank/login.aspx
-
-	uid=nisga&passw=014257&btnSubmit=Login

@@ -2,3 +2,5 @@ scapy
 colorama
 terminal_banner
 scapy_http
+requests
+json-encoder
