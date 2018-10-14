@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python
 import scapy.all as scapy
 from scapy_http import http
 from colorama import Fore,Back,Style
