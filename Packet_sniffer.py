@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python
 import scapy.all as scapy
 from scapy_http import http
 from colorama import Fore,Back,Style
@@ -29,9 +29,9 @@ def Prosess_sniffed_paceket(packet):
 		print(Fore.BLUE + "[+] HTTP Request >>" + str(website))
 	 	loginfo = Get_login_info(packet)
 	 	if loginfo:
-	 		print(Fore.RED + "\n\n\t [!] Possible Username/password >> " + loginfo + "\n\n\n")
 	 		file = open('data/log_' + FileName() + '.txt' ,'w+')
 	 		file.write(website + "\n\n\t" +loginfo)
+	 		print(Fore.RED + "\n\n\t [!] Possible Username/password >> " + loginfo + "\n\n\n")
 
 Sniff("eth0")
 
